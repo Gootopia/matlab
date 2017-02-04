@@ -1,7 +1,7 @@
 classdef TradeInstrument 
     %TradeInstrument Trading instrument (Stock, Future, etc)
     % Encapsulates the properties of a particular underlying
-    % Conststructor t=TradeInstrument(tws, symbol, secType)
+    % Conststructor t=TradeInstrument(symbol, secType)
     properties
         % Interactive brokers IContract COM object
         contract
@@ -15,14 +15,20 @@ classdef TradeInstrument
     end
     
     methods
-        % Constructor
-        % tws = instance of TWS (returned from ibtws)
+        % Constructor(symbol, secType)
         % symbol = ticker name (i.e: 'AAPL')
         % secType = 'STK', 'FUT', etc (see IP API)
-        function obj=TradeInstrument(tws, symbol, secType)
-            obj.contract=tws.Handle.createContract;
+        function obj=TradeInstrument(symbol, secType)
+            % Check if the connection exists. Create if needed.
+            if ~exist('ib_tws', 'var')
+                ibConnect;
+            end
+            
+            % Create the ib contract for this security
+            obj.contract=ib_tws.Handle.createContract;
             obj.contract.symbol = symbol;
             obj.contract.secType = secType;
+            
             % Defaults are USD currency and SMART exchange
             obj.contract.currency ='USD';
             obj.contract.exchange = 'SMART';

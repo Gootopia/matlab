@@ -1,16 +1,40 @@
-function d = ibHistory(ib,ibContract,startdate,enddate,period)
-%ibHistory() Interactive Brokers historical data download of date+OHLC.
-% ib = TWS instance (ibtws)
-% s = 
+function ti = ibHistory(ti,startdate, period, enddate)
+% Interactive Brokers historical data download of date+OHLC.
+%
+%ibHistory(ti, startdate, enddate, period)
+% ti = TradeInstrument
+% startdate = starting date. Refer to Matlab IB documentation
+% period[opt] = '1 day' (default), '1W', 'M'
+% enddate[opt] = ending date. Default is 'floor(now)'
+% Use: t_aapl = ibHistory(t_aapl, startdate, enddate)
+%
+% NOTE This is needed because Matlab is "pass-by-value" so results will be
+% discarded if you do not do this.
+
 % Default download period is '1 day'
 if ~exist('period','var') || isempty(period)
   period = '1 day';
 end
 
+% Assume today if we don't provide an enddate
+if ~exist('enddate', 'var') || isempty(enddate)
+    enddate = floor(now);
+end
+
+% Open the ib connection for processing
+ibConnect
+
 % call IB toolbox function which gets a bunch of extra stuff
-d_temp=history(ib,ibContract,startdate, enddate, 'TRADES', period);
+priceData=history(ib_tws,ti.contract,startdate, enddate, 'TRADES', period)
 
-% Only keep what we want (Date+OHLC)
-d=d_temp(:,1:5);
+% Grab the data we want (exclude volume and such)
+% Refer to Matlab IB docs for details
+ti.date = priceData(:,1);
+ti.open = priceData(:,2);
+ti.high = priceData(:,3);
+ti.low= priceData(:,4);
+ti.close = priceData(:,5);
 
+% Close the connection.
+close(ib_tws);
 end

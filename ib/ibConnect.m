@@ -8,10 +8,9 @@
 % connection and then close it first.
 
 % Check if a connection already exists using Matlab 'exist'
-% Use 'ans' since we can't assign the result
-exist ib_tws;
+result = exist('ib_tws', 'var');
 
-switch ans
+switch result
     % 1 => variable already exists, so we'll close that connection
     case 1
         close(ib_tws);
@@ -24,4 +23,4 @@ ib_tws = ibtws('',7496);
 
 % obtain the next valid order Id number and display it.
 % This also lets us know the connection is good.
-ib_nextId=orderid(ib_tws)
+%ib_nextId=orderid(ib_tws)
