@@ -25,7 +25,7 @@ end
 ibConnect
 
 % call IB toolbox function which gets a bunch of extra stuff
-priceData=history(ib_tws,ti.contract,startdate, enddate, 'TRADES', period)
+priceData=history(ib_tws,ti.contract,startdate, enddate, 'TRADES', period);
 
 % Grab the data we want (exclude volume and such)
 % Refer to Matlab IB docs for details
