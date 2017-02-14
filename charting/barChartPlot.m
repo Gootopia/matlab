@@ -49,12 +49,6 @@ else
     indexShift = 3;
 end
 
-if nargin+isMat < 7,
-    colorLine = 'k';
-else
-    colorLine = varargin{3+indexShift};
-end
-
 if nargin+isMat < 6
     date = (1:length(O))';
 else
@@ -72,21 +66,26 @@ l=length(O);
 hold on
 % Draw line from Low to High%%%%%%%%%%%%%%%%%
 for i=1:l
-   line([date(i) date(i)], [L(i) H(i)],'Color',colorLine)
+    colorLine =[0.8 0 0];
+    if O(i) > C(i)
+        colorLine = [0 0.6 0];
+    end
+    line([date(i) date(i)], [L(i) H(i)],'Color',colorLine, 'LineWidth',1.5)
 end
 
 % w = Width of body, change multiplier to draw body thicker or thinner
 % the 'min' ensures no errors on weekends ('time gap Fri. Mon.' > wanted
 % spacing)
 w=0.2*min([(date(2)-date(1)) (date(3)-date(2))]);
+
 % Draw open/close marks
- for i=1:l               
+ for i=1:l  
     xOpen=[date(i)-w date(i)];
     xClose=[date(i)+w date(i)];
     yOpen=[O(i) O(i)];
     yClose=[C(i) C(i)];
-    line(xOpen,yOpen,'Color',colorLine);
-    line(xClose,yClose,'Color',colorLine);
+    line(xOpen,yOpen,'Color',[0 0 0], 'LineWidth', 1.5);
+    line(xClose,yClose,'Color',[0 0 0], 'LineWidth', 1.5);
  end
 
 %%%%%%%%%% if dates supplied, put them on the x axis%%%%%%%%%%

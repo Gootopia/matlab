@@ -7,8 +7,8 @@ classdef TradeInstrument
         contract
         
         % start and end dates for the data in the vectors below
-        dateStart
-        dateEnd
+        dStart
+        dEnd
         
         % Type of data: '1 day' (default), '1W', 'M'
         period
@@ -28,18 +28,21 @@ classdef TradeInstrument
         % secType = 'STK', 'FUT', etc (see IP API)
         function obj=TradeInstrument(symbol, secType)
             % Check if the connection exists. Create if needed.
-            if ~exist('ib_tws', 'var')
-                ibConnect;
-            end
+            ibConnect
             
             % Create the ib contract for this security
             obj.contract=ib_tws.Handle.createContract;
             obj.contract.symbol = symbol;
+            
+            % Default security type is 'STK'
+            if ~exist('secType', 'var') || isempty(secType)
+                secType = 'STK';
+            end
             obj.contract.secType = secType;
             
             % Set default time frame for data range as 1-year
-            obj.dateEnd = floor(now);
-            obj.dateStart = obj.dateEnd - 365;
+            obj.dEnd = floor(now);
+            obj.dStart = obj.dEnd - 365;
             
             % Default period is 1 day
             obj.period = '1 day';
@@ -49,11 +52,11 @@ classdef TradeInstrument
             obj.contract.exchange = 'SMART';
         end
         
-        % getData(object)
+        % getHistorical(object)
         % object = this object
         % Downloads historical using the current data range and period
-        function obj = getHistoricalData(obj)
-            obj = ibHistory(obj, obj.dateStart, obj.period, obj.dateEnd);
+        function obj = getHistorical(obj, ib_tws)
+            obj = ibHistory(ib_tws, obj, obj.dStart, obj.period, obj.dEnd);
         end
     end
     

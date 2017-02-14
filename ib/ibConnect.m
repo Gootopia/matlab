@@ -19,8 +19,4 @@ end
 
 % Open a new connection on the local host over port 7496
 % Verify TWS settings are correct
-ib_tws = ibtws('',7496);
-
-% obtain the next valid order Id number and display it.
-% This also lets us know the connection is good.
-%ib_nextId=orderid(ib_tws)
+ib_tws = ibtws('127.0.0.1',7496);

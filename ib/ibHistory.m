@@ -1,4 +1,4 @@
-function ti = ibHistory(ti,startdate, period, enddate)
+function ti = ibHistory(ib, ti,startdate, period, enddate)
 % Interactive Brokers historical data download of date+OHLC.
 %
 %ibHistory(ti, startdate, enddate, period)
@@ -21,11 +21,8 @@ if ~exist('enddate', 'var') || isempty(enddate)
     enddate = floor(now);
 end
 
-% Open the ib connection for processing
-ibConnect
-
 % call IB toolbox function which gets a bunch of extra stuff
-priceData=history(ib_tws,ti.contract,startdate, enddate, 'TRADES', period);
+priceData=history(ib,ti.contract,startdate, enddate, 'TRADES', period);
 
 % Grab the data we want (exclude volume and such)
 % Refer to Matlab IB docs for details
@@ -35,6 +32,4 @@ ti.high = priceData(:,3);
 ti.low= priceData(:,4);
 ti.close = priceData(:,5);
 
-% Close the connection.
-close(ib_tws);
 end
