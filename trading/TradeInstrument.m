@@ -52,10 +52,17 @@ classdef TradeInstrument
             obj.contract.exchange = 'SMART';
         end
         
-        % getHistorical(object)
+        % getHistorical(object, ib_tws, start)
         % object = this object
+        % ib_tws = TWS instance
+        % [OPT] = start date ('MM/DD/YYYY')
         % Downloads historical using the current data range and period
-        function obj = getHistorical(obj, ib_tws)
+        function obj = getHistorical(obj, ib_tws, start)
+            % If starting date was provided, use that one
+            if exist('start','var')
+                obj.dStart = start;
+            end
+            
             % Convert startdate from 'mm/dd/yyyy' to double if not already
             if isa(obj.dStart, 'char')
                 obj.dStart = datenum(obj.dStart);
