@@ -25,7 +25,7 @@ classdef TradeInstrument
     methods
         % Constructor(symbol, secType)
         % symbol = ticker name (i.e: 'AAPL')
-        % secType = 'STK', 'FUT', etc (see IP API)
+        % [Opt]secType = 'STK' (default), 'FUT', etc (see IP API)
         function obj=TradeInstrument(symbol, secType)
             % Check if the connection exists. Create if needed.
             ibConnect
@@ -56,6 +56,15 @@ classdef TradeInstrument
         % object = this object
         % Downloads historical using the current data range and period
         function obj = getHistorical(obj, ib_tws)
+            % Convert startdate from 'mm/dd/yyyy' to double if not already
+            if isa(obj.dStart, 'char')
+                obj.dStart = datenum(obj.dStart);
+            end
+            % Convert end date from 'mm/dd/yyyy' to double if not already
+            if isa(obj.dEnd, 'char')
+                obj.dEnd = datenum(obj.dEnd);
+            end
+            
             obj = ibHistory(ib_tws, obj, obj.dStart, obj.period, obj.dEnd);
         end
     end
