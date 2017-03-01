@@ -28,7 +28,7 @@
 % - colorDown: Color for down candle               ['k']
 % - colorLine: Color for lines                     ['k']
 %
-% Note: identical inputs as required for barChartPlot except for colors
+% Note, this is not intended to be used by itself!
 
 function candlestick(varargin)
 % See if we have [OHLC] or seperate vectors and retrieve our 
@@ -76,13 +76,7 @@ w=.3*min([(date(2)-date(1)) (date(3)-date(2))]);
 %%%%%%%%%%%Find up and down days%%%%%%%%%%%%%%%%%%%
 d=C-O;
 l=length(d);
-% Create figure
-%figure1 = figure;
 
-% Create axes. Expand to fill more of screen
-%axes1 = axes('Parent',figure1,'Position',[0.03 0.05 0.95 0.9]);
-%hold(axes1,'on');
-hold on
 %%%%%%%%draw line from Low to High%%%%%%%%%%%%%%%%%
 for i=1:l
    line([date(i) date(i)],[L(i) H(i)],'Color',colorLine)
@@ -107,4 +101,3 @@ if (nargin+isMat > 5) && useDate,
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-hold off
