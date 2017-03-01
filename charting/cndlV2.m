@@ -50,8 +50,8 @@ else
     indexShift = 3;
 end
 if nargin+isMat < 7,
-    colorDown = 'k'; 
-    colorUp = 'w'; 
+    colorDown = [1.0 0 0]; 
+    colorUp = [0 0.8 0]; 
     colorLine = 'k';
 else
     colorUp = varargin{3+indexShift};
@@ -76,7 +76,12 @@ w=.3*min([(date(2)-date(1)) (date(3)-date(2))]);
 %%%%%%%%%%%Find up and down days%%%%%%%%%%%%%%%%%%%
 d=C-O;
 l=length(d);
-hold on
+% Create figure
+figure1 = figure;
+
+% Create axes. Expand to fill more of screen
+axes1 = axes('Parent',figure1,'Position',[0.03 0.05 0.95 0.9]);
+hold(axes1,'on');
 %%%%%%%%draw line from Low to High%%%%%%%%%%%%%%%%%
 for i=1:l
    line([date(i) date(i)],[L(i) H(i)],'Color',colorLine)
