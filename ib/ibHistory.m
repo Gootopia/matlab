@@ -26,10 +26,11 @@ priceData=history(ib,ti.contract,startdate, enddate, 'TRADES', period);
 
 % Grab the data we want (exclude volume and such)
 % Refer to Matlab IB docs for details
-ti.date = priceData(:,1);
+ti.dates = priceData(:,1);
 ti.open = priceData(:,2);
 ti.high = priceData(:,3);
 ti.low= priceData(:,4);
 ti.close = priceData(:,5);
-
+% Create custom tick labels of the format 'MM/YY' for graphing purposes
+ti = createTickLabels(ti);
 end

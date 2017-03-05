@@ -62,11 +62,13 @@ end
 if strcmp(showclose, 'showclose') 
     % Create standard line plot
     markers_close = plot(ti.close, 'o');
-    markers_close.MarkerSize = 2;
+    markers_close.MarkerSize = 4;
     markers_close.MarkerEdgeColor = [0 0 0.8];
-    %plot_price.MarkerEdgeColor = 'r';
-    %plot_price.LineWidth = 1.5;
 end
+
+% Show Dates along x-axis
+xticks(ti.date_xticks);
+xticklabels(cellstr(ti.date_xticklabels));
 
 %===== ADD INDICATORS TO DRAWINGS =====
 % Create SMA based on our selected closing price type

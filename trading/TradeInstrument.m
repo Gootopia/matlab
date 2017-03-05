@@ -15,7 +15,9 @@ classdef TradeInstrument
         
         % Price data
         % All are vectors (1xN)
-        date
+        dates
+        date_xticklabels
+        date_xticks
         open
         high
         low
