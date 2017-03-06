@@ -1,43 +1,6 @@
 % -----------------------------------------------------------
-% |Nagi Hatoum, Candlestick chart "ploter" function, 5/29/03 |
-% |Edited and expanded by Jelle C.J. Veraa, 3/28/2009        |
-% -----------------------------------------------------------
-% 
-% Important: date plotting subroutine needs 'tlabel' by Carlos Adrian 
-%   Vargas Aguilera 
-%   Available at the MATLAB Central File Exchange site, File ID: #19314  
-%   http://www.mathworks.com/matlabcentral/fileexchange/19314
-% 
 % function candlestick(O,H,L,C)
-%          candlestick(O,H,L,C,date)
-%          candlestick(O,H,L,C,date,colorUp,colorDown,colorLine)
-%          candlestick(OHLC)
-%          candlestick(OHLC,date)
-%          candlestick(OHLC,date,colorUp,colorDown,colorLine)
-%
-% To use colors without a date, put '0' as date
-%     i.e. candlestick(OHLC,0,'b','r','k');
-%
-% required inputs: column vectors of O(pen), H(igh), L(ow)
-% and C(lose) prices of commodity. 
-% Alternative: OHLC matrix of size [rowsx4] 
-%
-% optional inputs [default]: 
-% - date: serial date number (make with 'datenum') [no dates, index#]
-% - colorUp: Color for up candle                   ['w']
-% - colorDown: Color for down candle               ['k']
-% - colorLine: Color for lines                     ['k']
-%
-% Note, this is not intended to be used by itself!
-
-function candlestick(varargin)
-% See if we have [OHLC] or seperate vectors and retrieve our 
-% required variables (Feel free to make this code more pretty ;-)
-
-O = varargin{1};
-H = varargin{2};
-L = varargin{3};
-C = varargin{4};
+function candlestick(O,H,L,C)
 
 colorDown = [1.0 0 0]; 
 colorUp = [0 0.8 0]; 
@@ -49,27 +12,30 @@ date = (1:length(O))';
 % the 'min' ensures no errors on weekends ('time gap Fri. Mon.' > wanted
 % spacing)
 w=.3*min([(date(2)-date(1)) (date(3)-date(2))]);
-%%%%%%%%%%%Find up and down days%%%%%%%%%%%%%%%%%%%
-d=C-O;
-l=length(d);
 
+l=length(O);
+
+xl = xlim;
+dleft = xl(1);
+dright = xl(2);
+
+if dleft < 1
+    dleft = 1;
+end
+
+if dright > l
+    dright = l;
+end
+dleft = 1;
+dright = l;
 %%%%%%%%draw line from Low to High%%%%%%%%%%%%%%%%%
-for i=1:l
-   line([date(i) date(i)],[L(i) H(i)],'Color',colorLine)
+for i=dleft:dright
+   line([date(i) date(i)],[L(i) H(i)],'Color',colorLine);
+   x=[date(i)-w date(i)-w date(i)+w date(i)+w date(i)-w];
+   y=[O(i) C(i) C(i) O(i) O(i)];
+   if O(i) > C(i)
+        fill(x,y,colorDown);
+   else
+       fill(x,y,colorUp);
+   end
 end
-%%%%%%%%%%draw white (or user defined) body (down day)%%%%%%%%%%%%%%%%%
-n=find(d<0);
-for i=1:length(n)
-    x=[date(n(i))-w date(n(i))-w date(n(i))+w date(n(i))+w date(n(i))-w];
-    y=[O(n(i)) C(n(i)) C(n(i)) O(n(i)) O(n(i))];
-    fill(x,y,colorDown)
-end
-%%%%%%%%%%draw black (or user defined) body(up day)%%%%%%%%%%%%%%%%%%%
-n=find(d>=0);
-for i=1:length(n)
-    x=[date(n(i))-w date(n(i))-w date(n(i))+w date(n(i))+w date(n(i))-w];
-    y=[O(n(i)) C(n(i)) C(n(i)) O(n(i)) O(n(i))];
-    fill(x,y,colorUp)
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

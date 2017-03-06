@@ -23,10 +23,10 @@ if ~exist('showclose', 'var') || isempty(type)
 end
    
 %===== SET UP THE GRAPHICS =====
-figure1 = figure;
+f = figure;
 
 % Create axes. Expand to fill more of screen
-axes1 = axes('Parent',figure1,'Position',[0.03 0.05 0.95 0.9]);
+axes1 = axes('Parent',f,'Position',[0.03 0.05 0.95 0.9]);
 % lines on top/right edges
 box(axes1,'on');
 
@@ -44,6 +44,28 @@ end
 
 % 
 hold(axes1,'on');
+
+%===== CHART CALLBACK STUFF =====
+cb = cbChart();
+cb.ti = ti;
+
+%===== CREATE THE TOOLBAR =====
+% Need to pass info to the toolbar icons
+
+% Create all the toolbar stuff
+tb = uitoolbar(f);
+p_leftShift = uipushtool(tb);
+p_rightShift = uipushtool(tb);
+
+img = imread('icons\LeftArrow.png');
+p_leftShift.CData = img;
+p_leftShift.UserData = cb;
+p_leftShift.ClickedCallback = @cbChart.shiftLeft;
+img = imread('icons\RightArrow.png');
+p_rightShift.CData = img;
+p_rightShift.UserData = cb;
+p_rightShift.ClickedCallback = @cbChart.shiftRight;
+
 
 %===== CREATE THE CHART =====
 % Create items needed for HeikenAshi
