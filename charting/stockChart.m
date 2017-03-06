@@ -78,6 +78,10 @@ switch(type)
     case 'ha'
         [ho,hh,hl,hc] = heikenAshi(ti);
         candlestick(ho', hh', hl', hc');
+    
+    % Standard candlestick chart
+    case 'candle'
+        candlestick(ti.open, ti.high, ti.low, ti.close);
 end
 
 % Show a plot with the actual closing prices.
