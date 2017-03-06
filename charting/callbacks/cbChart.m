@@ -1,6 +1,5 @@
 classdef cbChart
     %cbChart various static callbacks for charts
-    %   More to come!
     
     properties
         barsToShift;
@@ -9,14 +8,27 @@ classdef cbChart
     
     methods
         function obj=cbChart()
+            % About 252 trading days in a year.
             obj.barsToShift = 252;
         end
     end
     
     methods(Static)
+        % Custom Data Cursor callback
+        function txt = dataCursor(~,event_obj, ti)
+            pos = event_obj.Position;
+            bar = floor(pos(1));
+            bar_date = ti.dates(bar);
+            txt = sprintf('%s\nO=%.1f\nH=%.1f\nL=%.1f\nC=%.1f',...
+                datestr(bar_date),... 
+                ti.open(bar),...
+                ti.high(bar),... 
+                ti.low(bar),... 
+                ti.close(bar));
+        end
+        
         function shiftLeft(src, event)
             cb = src.UserData;
-            ti = cb.ti;
             
             xl = xlim;
             left = xl(1) - cb.barsToShift;

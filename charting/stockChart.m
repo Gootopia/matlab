@@ -24,6 +24,8 @@ end
    
 %===== SET UP THE GRAPHICS =====
 f = figure;
+% Save the trade instrument so we can use it in the tooltip.
+f.UserData = ti;
 
 % Create axes. Expand to fill more of screen
 axes1 = axes('Parent',f,'Position',[0.03 0.05 0.95 0.9]);
@@ -42,7 +44,6 @@ if nbars > SHOWBARS
     xlim([x_min x_max]);
 end
 
-% 
 hold(axes1,'on');
 
 %===== CHART CALLBACK STUFF =====
@@ -50,22 +51,25 @@ cb = cbChart();
 cb.ti = ti;
 
 %===== CREATE THE TOOLBAR =====
-% Need to pass info to the toolbar icons
-
 % Create all the toolbar stuff
 tb = uitoolbar(f);
-p_leftShift = uipushtool(tb);
-p_rightShift = uipushtool(tb);
 
+p_leftShift = uipushtool(tb);
 img = imread('icons\LeftArrow.png');
 p_leftShift.CData = img;
 p_leftShift.UserData = cb;
 p_leftShift.ClickedCallback = @cbChart.shiftLeft;
 img = imread('icons\RightArrow.png');
+p_rightShift = uipushtool(tb);
 p_rightShift.CData = img;
 p_rightShift.UserData = cb;
 p_rightShift.ClickedCallback = @cbChart.shiftRight;
 
+%===== CREATE DATACURSOR CALLBACK ====
+h=datacursormode(f);
+h.DisplayStyle = 'window';
+% Callback also gets the ti so we can access the data.
+h.UpdateFcn = {@cbChart.dataCursor, ti};
 
 %===== CREATE THE CHART =====
 % Create items needed for HeikenAshi
