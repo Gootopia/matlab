@@ -3,8 +3,16 @@ classdef TradeInstrument
     % Encapsulates the properties of a particular underlying
     % Conststructor t=TradeInstrument(symbol, secType)
     properties
+        % ticker symbol, security type
+        ticker
+        tickerType
+        
         % Interactive brokers IContract COM object
         contract
+        
+        % Historical Connection Endpoint
+        % Source = 'ib' or 'yahoo'
+        dataSource
         
         % start and end dates for the data in the vectors below
         dStart
@@ -25,41 +33,43 @@ classdef TradeInstrument
     end
     
     methods
-        % Constructor(symbol, secType)
+        % Constructor(symbol, source, secType)
         % symbol = ticker name (i.e: 'AAPL')
-        % [Opt]secType = 'STK' (default), 'FUT', etc (see IP API)
-        function obj=TradeInstrument(symbol, secType)
-            % Check if the connection exists. Create if needed.
-            ibConnect
+        % source = ibtws or yahoo instance
+        % [OPT]secType = 'STK' (default), 'FUT', etc (see IP API)
+        function obj=TradeInstrument(symbol, secType, source)
+            obj.ticker = symbol;
             
-            % Create the ib contract for this security
-            obj.contract=ib_tws.Handle.createContract;
-            obj.contract.symbol = symbol;
+            % Default data source is 'yahoo'
+            if ~exist('source', 'var') || isempty(source)
+                source = yahoo;
+            end
+            obj.dataSource = source;
             
             % Default security type is 'STK'
             if ~exist('secType', 'var') || isempty(secType)
                 secType = 'STK';
             end
-            obj.contract.secType = secType;
+            obj.tickerType = secType;
             
             % Set default time frame for data range as 1-year
             obj.dEnd = floor(now);
             obj.dStart = obj.dEnd - 365;
             
-            % Default period is 1 day
-            obj.period = '1 day';
-            
-            % Defaults are USD currency and SMART exchange
-            obj.contract.currency ='USD';
-            obj.contract.exchange = 'SMART';
+            % Default period is 1 day. Format is different for ib/yahoo.
+            if isa(source, 'yahoo')
+                obj.period = 'd';
+            else
+                obj.period = '1 day';
+            end
         end
         
-        % getHistorical(object, ib_tws, start)
+        % getHistorical(object, start, source)
         % object = this object
-        % ib_tws = TWS instance
         % [OPT] = start date ('MM/DD/YYYY')
         % Downloads historical using the current data range and period
-        function obj = getHistorical(obj, ib_tws, start)
+        % from the current source
+        function obj = getHistorical(obj, start)
             % If starting date was provided, use that one
             if exist('start','var')
                 obj.dStart = start;
@@ -69,13 +79,36 @@ classdef TradeInstrument
             if isa(obj.dStart, 'char')
                 obj.dStart = datenum(obj.dStart);
             end
+            
             % Convert end date from 'mm/dd/yyyy' to double if not already
             if isa(obj.dEnd, 'char')
                 obj.dEnd = datenum(obj.dEnd);
             end
             
-            obj = ibHistory(ib_tws, obj, obj.dStart, obj.period, obj.dEnd);
+            % determine where to pull historical data from (ib/yahoo)
+            % Handle yahoo requests (daily only)
+            if isa(obj.dataSource, 'yahoo')
+                obj = yahooHistory(obj.dataSource, obj, obj.dStart, obj.period, obj.dEnd);
+            % Handle IB requests (required for intraday)
+            elseif isa(obj.dataSource, 'ibtws')
+                obj = ibHistory(obj.dataSource, obj, obj.dStart, obj.period, obj.dEnd);
+            end
         end
+        
+        function obj = setYahoo(obj)
+        end
+        
+        function obj = setIB(obj,ib)
+            if isempty(obj.contract)
+                obj.contract=ib.Handle.createContract;
+                obj.contract.symbol = obj.ticker;
+                % Defaults are USD currency and SMART exchange
+                obj.contract.currency ='USD';
+                obj.contract.exchange = 'SMART';   
+            end
+            obj.dataSource = ib;
+        end
+        
     end
     
 end

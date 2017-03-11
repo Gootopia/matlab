@@ -5,7 +5,7 @@ function stockChart(ti,type,showclose)
 SMAS = 43;
 SMAL = 252;
 % number of price bars to show
-SHOWBARS = 250;
+SHOWBARS = 500;
 
 % Default close is just our regular price.
 close = ti.close;
@@ -99,6 +99,7 @@ end
 % Show Dates along x-axis
 xticks(ti.date_xticks);
 xticklabels(cellstr(ti.date_xticklabels));
+xtickangle(45);
 
 %===== ADD INDICATORS TO DRAWINGS =====
 % Create SMA based on our selected closing price type

@@ -28,6 +28,7 @@ if dright > l
 end
 dleft = 1;
 dright = l;
+
 %%%%%%%%draw line from Low to High%%%%%%%%%%%%%%%%%
 for i=dleft:dright
    line([date(i) date(i)],[L(i) H(i)],'Color',colorLine);

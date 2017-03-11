@@ -2,14 +2,13 @@ classdef cbChart
     %cbChart various static callbacks for charts
     
     properties
-        barsToShift;
+        shiftBars;
         ti;
     end
     
     methods
         function obj=cbChart()
-            % About 252 trading days in a year.
-            obj.barsToShift = 252;
+            obj.shiftBars = 252;
         end
     end
     
@@ -19,6 +18,7 @@ classdef cbChart
             pos = event_obj.Position;
             bar = floor(pos(1));
             bar_date = ti.dates(bar);
+            %Build output string for display
             txt = sprintf('%s\nO=%.1f\nH=%.1f\nL=%.1f\nC=%.1f',...
                 datestr(bar_date),... 
                 ti.open(bar),...
@@ -29,14 +29,20 @@ classdef cbChart
         
         function shiftLeft(src, event)
             cb = src.UserData;
+            ti = cb.ti;
             
+            % Shift existing window by desired amount
+            % This maintains the current width set by xlim.
             xl = xlim;
-            left = xl(1) - cb.barsToShift;
+            x_width = xl(2) - xl(1);
+            left = xl(1) - cb.shiftBars;
             if left < 1
                 left = 1;
             end
-            right = left + cb.barsToShift;
-            xlim([left right]);
+            right = left + x_width;
+            
+            % clip window to contain period high/low
+            clipChart(ti, left, right);
         end
         
         function shiftRight(src, event)
@@ -44,14 +50,20 @@ classdef cbChart
             ti = cb.ti;
             lmax = length(ti.open);
         
+            % Shift existing datawindow by desired amount.
+            % This maintains the current width set by xlim.
             xl = xlim;
-            right = xl(2) + cb.barsToShift;
+            x_width = xl(2) - xl(1);
+            right = xl(2) + cb.shiftBars;
             if right > lmax
                 right = lmax;
             end
             
-            left = right - cb.barsToShift;
-            xlim([left right]);
+            left = right - x_width;
+
+            % clip window to contain period high/low
+            clipChart(ti, left, right);
+
         end
     end
     

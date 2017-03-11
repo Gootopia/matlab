@@ -26,7 +26,8 @@ for xtick=1:n
         else
             year = year - 1900;
         end
-        labelStr = sprintf('%02d/%02d/%02d',dv(2), dv(3), year);
+        %labelStr = sprintf('%02d/%02d/%02d',dv(2), dv(3), year);
+        labelStr = sprintf('%02d/%02d',dv(2), year);
         
         % Save the label and the index for charting purposes
         xticklabels(xtick_index) = labelStr;

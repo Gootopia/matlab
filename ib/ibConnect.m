@@ -8,15 +8,15 @@
 % connection and then close it first.
 
 % Check if a connection already exists using Matlab 'exist'
-result = exist('ib_tws', 'var');
+result = exist('ib', 'var');
 
 switch result
     % 1 => variable already exists, so we'll close that connection
     case 1
-        close(ib_tws);
+        close(ib);
     otherwise
 end
 
 % Open a new connection on the local host over port 7496
 % Verify TWS settings are correct
-ib_tws = ibtws('127.0.0.1',7496);
+ib = ibtws('127.0.0.1',7496);
