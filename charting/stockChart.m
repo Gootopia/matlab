@@ -54,16 +54,31 @@ cb.ti = ti;
 % Create all the toolbar stuff
 tb = uitoolbar(f);
 
+% Left shift. Moves chart toward earlier dates
 p_leftShift = uipushtool(tb);
 img = imread('icons\LeftArrow.png');
 p_leftShift.CData = img;
 p_leftShift.UserData = cb;
 p_leftShift.ClickedCallback = @cbChart.shiftLeft;
+
+% Right shift. Moves chart toward later dates.
 img = imread('icons\RightArrow.png');
 p_rightShift = uipushtool(tb);
 p_rightShift.CData = img;
 p_rightShift.UserData = cb;
 p_rightShift.ClickedCallback = @cbChart.shiftRight;
+
+img = imread('icons\ZoomOut.png');
+p_zoomOut = uipushtool(tb);
+p_zoomOut.CData = img;
+p_zoomOut.UserData = cb;
+p_zoomOut.ClickedCallback = @cbChart.zoomOut;
+
+img = imread('icons\ZoomIn.png');
+p_zoomIn = uipushtool(tb);
+p_zoomIn.CData = img;
+p_zoomIn.UserData = cb;
+p_zoomIn.ClickedCallback = @cbChart.zoomIn;
 
 %===== CREATE DATACURSOR CALLBACK ====
 h=datacursormode(f);

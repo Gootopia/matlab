@@ -27,6 +27,28 @@ classdef cbChart
                 ti.close(bar));
         end
         
+        function zoomOut(src, event)
+            cb = src.UserData;
+            ti = cb.ti;
+            xl = xlim;
+            xlower = xl(1);
+            xupper = xl(2);
+            xlower = xlower - 50;
+            xupper = xupper + 50;
+            clipChart(ti, xlower, xupper);
+        end
+        
+        function zoomIn(src, event)
+            cb = src.UserData;
+            ti = cb.ti;
+            xl = xlim;
+            xlower = xl(1);
+            xupper = xl(2);
+            xlower = xlower + 50;
+            xupper = xupper - 50;
+            clipChart(ti, xlower, xupper);
+        end
+        
         function shiftLeft(src, event)
             cb = src.UserData;
             ti = cb.ti;
