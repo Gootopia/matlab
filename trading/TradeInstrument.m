@@ -53,8 +53,9 @@ classdef TradeInstrument
             obj.tickerType = secType;
             
             % Set default time frame for data range as 1-year
-            obj.dEnd = floor(now);
-            obj.dStart = obj.dEnd - 365;
+            % 0 indicates always use most recent date as end
+            obj.dEnd = 0;
+            obj.dStart = '1/1/2017';
             
             % Default period is 1 day. Format is different for ib/yahoo.
             if isa(source, 'yahoo')
@@ -80,10 +81,8 @@ classdef TradeInstrument
                 obj.dStart = datenum(obj.dStart);
             end
             
-            % Convert end date from 'mm/dd/yyyy' to double if not already
-            if isa(obj.dEnd, 'char')
-                obj.dEnd = datenum(obj.dEnd);
-            end
+            % Always grab up to most recent data.
+            obj.dEnd = floor(now);
             
             % determine where to pull historical data from (ib/yahoo)
             % Handle yahoo requests (daily only)
@@ -93,6 +92,9 @@ classdef TradeInstrument
             elseif isa(obj.dataSource, 'ibtws')
                 obj = ibHistory(obj.dataSource, obj, obj.dStart, obj.period, obj.dEnd);
             end
+            
+            % Apply any known corrections (splits, errors, etc.)
+            obj = adjustData(obj);
         end
         
         function obj = setYahoo(obj)
