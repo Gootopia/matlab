@@ -97,6 +97,19 @@ classdef TradeInstrument
             obj = adjustData(obj);
         end
         
+        % Truncate data to most recent 'n' bars
+        function obj = truncate(obj, n)
+            bars = length(obj.close);
+            n_start = bars-n+1;
+            obj.open = obj.open(n_start: bars);
+            obj.high = obj.high(n_start: bars);
+            obj.low = obj.low(n_start:bars);
+            obj.close = obj.close(n_start: bars);
+            obj.dates = obj.dates(n_start: bars);
+            obj.date_xticklabels = obj.date_xticklabels(n_start : bars);
+            obj.date_xticks = obj.date_xticks(n_start : bars);
+        end
+        
         function obj = setYahoo(obj)
         end
         
