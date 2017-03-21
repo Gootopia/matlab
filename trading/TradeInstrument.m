@@ -106,8 +106,9 @@ classdef TradeInstrument
             obj.low = obj.low(n_start:bars);
             obj.close = obj.close(n_start: bars);
             obj.dates = obj.dates(n_start: bars);
-            obj.date_xticklabels = obj.date_xticklabels(n_start : bars);
-            obj.date_xticks = obj.date_xticks(n_start : bars);
+            % Update with new tick labels based on truncated data
+            obj = createTickLabels(obj);
+            
         end
         
         function obj = setYahoo(obj)

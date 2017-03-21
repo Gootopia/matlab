@@ -1,4 +1,4 @@
-function r = returns( ti, period, type )
+function r = returns( ti, type, period)
 %logReturn = natural log of closing price returns
 %   r = log return
 %   ti = trading instrument
@@ -26,10 +26,14 @@ end
 
 % Compute returns
 for n=n_start:bars
-    p_0 = ti.close(n);
-
-    if strcmp(type, 'abs') ~= 1
+    % Must use previous bar to avoid "look-ahead" syndrome
+    p_0 = ti.close(n-1);
+    d_0 = datestr(ti.dates(n-1));
+    
+    % Get value at start of period
+    if ~strcmp(type, 'abs')
         p_lookback = ti.close(n-period);
+        d_lookback = datestr(ti.dates(n-period));
     end
     
     % lookback returns: logarithmic
@@ -40,8 +44,12 @@ for n=n_start:bars
         r(n) = p_0 / ti.close(1);
     %lookback returns: ratio
     else
-        r(n) = (p_0 - p_lookback) / p_lookback;
+        r_period = (p_0 - p_lookback) / p_lookback;
+        r(n) = r_period;
     end
+    
+    % Display return for debugging purposes
+    %disp(sprintf('%s: P0=%f, PLB=%f, R=%f',d_0,p_0,p_lookback,r(n)));
 end
 
 % get rid of the initial bars which were before lookback period.

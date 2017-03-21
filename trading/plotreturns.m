@@ -1,4 +1,4 @@
-% Plot rolling 252 day returns
+% Plot absolute returns over time
 figure
 plot(rabs_efa);
 hold
@@ -11,7 +11,7 @@ xtickangle(45);
 grid on
 grid minor
 
-% Plot absolute returns
+% Plot rolling returns
 figure
 plot(r_efa);
 hold

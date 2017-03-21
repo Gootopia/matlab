@@ -9,28 +9,20 @@ t_efa = getHistorical(t_efa, '1/1/1990');
 
 disp 'Truncating Data...';
 bars_spy = length(t_spy.close);
-bars_agg = length(t_agg.close);
+bars_efa = length(t_efa.close);
 
-l_shortest = min([bars_efa bars_spyg]);
+l_shortest = min([bars_efa bars_spy]);
 
 t_spy = truncate(t_spy, l_shortest);
 t_efa = truncate(t_efa, l_shortest);
 
 % Compute rolling yearly (252 day) returns
-r_efa = returns(t_efa, 252, 'std');
-r_spy = returns(t_spy, 252, 'std');
+r_efa = returns(t_efa, 'std', 252);
+r_spy = returns(t_spy, 'std', 252);
 
 % Compute absolute returns
-rabs_efa = returns(t_efa, 252, 'abs');
-rabs_spy = returns(t_spy, 252, 'abs');
+rabs_efa = returns(t_efa, 'abs');
+rabs_spy = returns(t_spy, 'abs');
 
-figure
-plot(rabs_efa);
-hold
-plot(rabs_spy);
+%================ Start ===============
 
-figure
-plot(r_efa);
-hold
-plot(r_spy);
-disp 'Setup Done.';
