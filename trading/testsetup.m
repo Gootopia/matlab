@@ -1,4 +1,8 @@
 disp 'Creating Instruments (SPY, EFA)...';
+% Dummy instrument for convenience
+t_cash = TradeInstrument('CASH');
+
+% Portfolio of trading instruments
 t_spy = TradeInstrument('SPY');
 t_efa = TradeInstrument('EFA');
 
@@ -15,6 +19,9 @@ l_shortest = min([bars_efa bars_spy]);
 
 t_spy = truncate(t_spy, l_shortest);
 t_efa = truncate(t_efa, l_shortest);
+
+% Cash has no "close", but we need a vector for the algorithm
+t_cash.close = 0*t_spy.close;
 
 % Compute rolling yearly (252 day) returns
 r_efa = returns(t_efa, 'std', 252);
