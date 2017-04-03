@@ -7,14 +7,14 @@ classdef PositionConversion
     
     methods(Static)
         % [cash_per_purchase,shares_purchased, err] = cashToEquity(cash_total, purchase_prices, cash_division)
-        % cash_total = total amount of cash allocated for purchase in 'N' transactions
-        % purchase_prices = vector of 'N' transaction prices
-        % cash_split = vector amount of cash allocated to individual 'N' transactions (10=10%, etc).
+        %   cash_total = total amount of cash allocated for purchase in 'N' transactions
+        %   purchase_prices = vector of 'N' transaction prices
+        %   cash_split = vector amount of cash allocated to individual 'N' transactions (10=10%, etc).
         % OUTPUTS:
-        % cash_per_purchase = vector of cash allocated to each transaction
-        % shares_purchased = vector of shares purchase in each transaction
-        % err = -1 (cash <=0), -2 (vector length inequality)
-        function [cash_per_purchase,shares_purchased, err] = cashToEquity(cash_total, purchase_prices, cash_split)
+        %   cash_per_purchase = vector of cash allocated to each transaction
+        %   shares_purchased = vector of shares purchase in each transaction
+        %   err = -1 (cash <=0), -2 (vector length inequality)
+        function [cash_per_purchase, shares_purchased, err] = cashToEquity(cash_total, purchase_prices, cash_split)
             % Default return values
             cash_per_purchase=[];
             shares_purchased=[];
@@ -41,7 +41,7 @@ classdef PositionConversion
         % OUTPUTS
         %    profits = vector of profit/loss for each transaction
         %    err = -1 (vector length inequality)
-        function [profits,err] = equityToCash(shares, purchase_prices, sale_prices)
+        function [profits, err] = equityToCash(shares, purchase_prices, sale_prices)
             err = 0;
             profits = 0;
             if length(shares) ~= length(sale_prices) || length(shares) ~= length(purchase_prices)

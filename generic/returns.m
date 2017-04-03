@@ -1,9 +1,9 @@
 function r = returns( ti, type, period)
-%logReturn = natural log of closing price returns
-%   r = log return
+%returns = compute returns of desired type/period
+%   r = return
 %   ti = trading instrument
-%   period = lookback period
-%   offset = index of price period
+%   type = 'abs' (absolute), 'log' (lognormal), 'normal' (default ratio)
+%   period = lookback length
 
 % Default period is daily
 if ~exist('period', 'var') || isempty(period)
@@ -36,13 +36,13 @@ for n=n_start:bars
         d_lookback = datestr(ti.dates(n-period));
     end
     
-    % lookback returns: logarithmic
+    % logarithmic
     if strcmp(type,'log')
         r(n) = log(p_0 / p_lookback);
-    % absolute return over beginning of data
+    % absolute return since beginning of data
     elseif strcmp(type,'abs')
         r(n) = p_0 / ti.close(1);
-    %lookback returns: ratio
+    % Ratio return
     else
         r_period = (p_0 - p_lookback) / p_lookback;
         r(n) = r_period;
