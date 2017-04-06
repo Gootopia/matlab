@@ -108,7 +108,6 @@ classdef TradeInstrument
             obj.dates = obj.dates(n_start: bars);
             % Update with new tick labels based on truncated data
             obj = createTickLabels(obj);
-            
         end
         
         function obj = setYahoo(obj)

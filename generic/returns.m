@@ -1,6 +1,6 @@
 function r = returns( ti, type, period)
 %returns = compute returns of desired type/period
-%   r = return
+%   r = return. Length is shorter than ti data due to lookback.
 %   ti = trading instrument
 %   type = 'abs' (absolute), 'log' (lognormal), 'normal' (default ratio)
 %   period = lookback length
@@ -21,8 +21,11 @@ r = zeros(1,bars);
 if strcmp(type,'abs')
     n_start = 1;
 else
-    n_start = period+1;
+    n_start = period;
 end
+
+% Must always add 1 to get past the lookback period
+n_start = n_start+1;
 
 % Compute returns
 for n=n_start:bars

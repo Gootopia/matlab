@@ -14,8 +14,9 @@ classdef PositionConversion
         %   cash_per_purchase = vector of cash allocated to each transaction
         %   shares_purchased = vector of shares purchase in each transaction
         %   err = -1 (cash <=0), -2 (vector length inequality)
-        function [cash_per_purchase, shares_purchased, err] = cashToEquity(cash_total, purchase_prices, cash_split)
+        function [cash_per_purchase,shares_purchased, err] = cashToEquity(cash_total, purchase_prices, cash_split)
             % Default return values
+            err = 0;
             cash_per_purchase=[];
             shares_purchased=[];
 

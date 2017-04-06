@@ -20,8 +20,12 @@ l_shortest = min([bars_efa bars_spy]);
 t_spy = truncate(t_spy, l_shortest);
 t_efa = truncate(t_efa, l_shortest);
 
-% Cash has no "close", but we need a vector for the algorithm
-t_cash.close = 0*t_spy.close;
+% Cash value doesn't vary, but we need a vector of opens/closes.
+t_cash.close = ones(1:length(l_shortest));
+t_cash.open = t_cash.close;
+
+% Ditto on dates, so just copy from somebody else.
+t_cash.dates = t_spy.dates;
 
 % Compute rolling yearly (252 day) returns
 r_efa = returns(t_efa, 'std', 252);
