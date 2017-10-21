@@ -3,6 +3,18 @@ disp 'Creating Instruments...';
 
 % Portfolio of trading instruments
 disp 'CREATING INSTRUMENTS...';
+
+% Create Indicies. Could use enum, but this keeps it in the file
+SPY=1;
+IWM=2;
+EFA=3;
+LQD=4;
+HYG=5;
+REM=6;
+VNQ=7;
+GLD=8;
+TLT=9;
+
 t_spy = TradeInstrument('SPY');
 t_iwm = TradeInstrument('IWM');
 t_efa = TradeInstrument('EFA');
@@ -20,15 +32,16 @@ t_gld = TradeInstrument('GLD');
 t_tlt = TradeInstrument('TLT');
 
 p=cell(9,1);
-p(1) = {t_spy};
-p(2) = {t_iwm};
-p(3) = {t_efa};
-p(4) = {t_lqd};
-p(5) = {t_hyg};
-p(6) = {t_rem};
-p(7) = {t_vnq};
-p(8) = {t_gld};
-p(9) = {t_tlt};
+r=cell(9,1);
+p(SPY) = {t_spy};
+p(IWM) = {t_iwm};
+p(EFA) = {t_efa};
+p(LQD) = {t_lqd};
+p(HYG) = {t_hyg};
+p(REM) = {t_rem};
+p(VNQ) = {t_vnq};
+p(GLD) = {t_gld};
+p(TLT) = {t_tlt};
 disp 'DOWNLOADING DATA...';
 startdate = '1/1/2008';
 
@@ -37,6 +50,7 @@ for n=1:tickers(1)
     sym = p{n};
     disp(sprintf('%s',sym.ticker));
     sym = getHistorical(sym, startdate);
+    r(n) = {returns(sym, 'std', 252)};
     p(n)= {sym};
 end
 
